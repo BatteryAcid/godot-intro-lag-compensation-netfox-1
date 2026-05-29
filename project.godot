@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="godot-lag-compensation-1"
+config/name="godot-lag-compensation-netfox-1"
 run/main_scene="uid://wdtx61fmwthf"
 config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/image="uid://dyh6r887he05y"
@@ -74,4 +74,4 @@ fire={
 
 autoconnect/port=8000
 autoconnect/simulated_latency_ms=100
-autoconnect/enabled=true
+autoconnect/enabled=false
