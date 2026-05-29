@@ -73,4 +73,5 @@ fire={
 [netfox]
 
 autoconnect/port=8000
-autoconnect/simulated_latency_ms=400
+autoconnect/simulated_latency_ms=100
+autoconnect/enabled=true
