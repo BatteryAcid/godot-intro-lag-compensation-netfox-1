@@ -1,8 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://c8lhimkedr6pn"]
+[gd_scene format=3 uid="uid://c8lhimkedr6pn"]
 
 [ext_resource type="Script" uid="uid://cnirl4fbcu71k" path="res://scripts/player.gd" id="1_3vyb7"]
 [ext_resource type="SpriteFrames" uid="uid://djepmkigcjqks" path="res://assets/ship_sprite_frames.tres" id="2_g2els"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_ur7pv"]
 [ext_resource type="Script" uid="uid://bhsaax8jly61e" path="res://scripts/player_input.gd" id="3_qhqgy"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_y4r1p"]
 [ext_resource type="Script" uid="uid://djmkaq8jm51v3" path="res://scripts/weapon.gd" id="4_dqkch"]
 [ext_resource type="PackedScene" uid="uid://cc3hgxo55hou7" path="res://scenes/projectile.tscn" id="5_qlg0r"]
 [ext_resource type="Script" uid="uid://dash6tjwn1c6" path="res://scripts/components/hurt_component.gd" id="6_fjrip"]
@@ -10,20 +12,12 @@
 [ext_resource type="Script" uid="uid://bd52tlm3o3hqg" path="res://scripts/components/hurtbox_component.gd" id="7_smehm"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g2els"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath(".:selected_ship")
 properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:selected_ship")
+properties/0/replication_mode = 0
+properties/1/path = NodePath("AttributeComponent:health")
 properties/1/spawn = true
-properties/1/replication_mode = 0
-properties/2/path = NodePath("AttributeComponent:health")
-properties/2/spawn = true
-properties/2/replication_mode = 2
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhqgy"]
-properties/0/path = NodePath("PlayerInput:input_dir")
-properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/1/replication_mode = 2
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qhqgy"]
 radius = 50.0
@@ -41,61 +35,68 @@ width = 100
 height = 8
 fill_from = Vector2(0.00206825, 0.0775595)
 
-[node name="Player" type="Node2D" node_paths=PackedStringArray("player_input", "input_synchronizer", "player_sprite", "attribute_component", "health_bar")]
+[node name="Player" type="Node2D" unique_id=738750967 node_paths=PackedStringArray("player_input", "player_sprite", "attribute_component", "health_bar")]
 script = ExtResource("1_3vyb7")
 player_input = NodePath("PlayerInput")
-input_synchronizer = NodePath("PlayerInput/InputSynchronizer")
 player_sprite = NodePath("AnimatedSprite2D")
 attribute_component = NodePath("AttributeComponent")
 health_bar = NodePath("HealthBarContainer/HealthBar")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=604014632]
 replication_config = SubResource("SceneReplicationConfig_g2els")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="RollbackSynchronizer" type="Node" parent="." unique_id=1593446615 node_paths=PackedStringArray("root")]
+script = ExtResource("2_ur7pv")
+root = NodePath("..")
+state_properties = Array[String]([":position", ":_velocity"])
+input_properties = Array[String](["PlayerInput:input_dir"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="TickInterpolator" type="Node" parent="." unique_id=8466099 node_paths=PackedStringArray("root")]
+script = ExtResource("3_y4r1p")
+root = NodePath("..")
+properties = Array[String]([":position"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1770023733]
 sprite_frames = ExtResource("2_g2els")
 autoplay = "default"
 
-[node name="PlayerInput" type="Node" parent="."]
+[node name="PlayerInput" type="Node" parent="." unique_id=895674398]
 script = ExtResource("3_qhqgy")
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput"]
-root_path = NodePath("../..")
-replication_config = SubResource("SceneReplicationConfig_qhqgy")
-public_visibility = false
-
-[node name="Weapon" type="Node2D" parent="." node_paths=PackedStringArray("player_input", "projectile_spawn_path")]
+[node name="Weapon" type="Node2D" parent="." unique_id=61663775 node_paths=PackedStringArray("player_input", "projectile_spawn_path")]
 script = ExtResource("4_dqkch")
 player_input = NodePath("../PlayerInput")
 projectile = ExtResource("5_qlg0r")
 projectile_spawn_path = NodePath("../Projectiles")
 
-[node name="ProjectileSpawner" type="MultiplayerSpawner" parent="Weapon"]
+[node name="ProjectileSpawner" type="MultiplayerSpawner" parent="Weapon" unique_id=552364528]
 _spawnable_scenes = PackedStringArray("uid://cc3hgxo55hou7")
 spawn_path = NodePath("../../Projectiles")
 
-[node name="Projectiles" type="Node2D" parent="."]
+[node name="Projectiles" type="Node2D" parent="." unique_id=1273389197]
 top_level = true
 
-[node name="AttributeComponent" type="Node" parent="."]
+[node name="AttributeComponent" type="Node" parent="." unique_id=2014050512]
 script = ExtResource("6_smehm")
 metadata/_custom_type_script = "uid://pomul4e5d0i1"
 
-[node name="HurtboxComponent" type="Area2D" parent="."]
+[node name="HurtboxComponent" type="Area2D" parent="." unique_id=965541226]
 script = ExtResource("7_smehm")
 metadata/_custom_type_script = "uid://bd52tlm3o3hqg"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" unique_id=650697763]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_qhqgy")
 
-[node name="HurtComponent" type="Node" parent="." node_paths=PackedStringArray("hurtbox_component", "attribute_component")]
+[node name="HurtComponent" type="Node" parent="." unique_id=351805822 node_paths=PackedStringArray("hurtbox_component", "attribute_component")]
 script = ExtResource("6_fjrip")
 hurtbox_component = NodePath("../HurtboxComponent")
 attribute_component = NodePath("../AttributeComponent")
 metadata/_custom_type_script = "uid://dash6tjwn1c6"
 
-[node name="HealthBarContainer" type="Control" parent="."]
+[node name="HealthBarContainer" type="Control" parent="." unique_id=1507022627]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -110,7 +111,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 
-[node name="HealthBar" type="TextureProgressBar" parent="HealthBarContainer"]
+[node name="HealthBar" type="TextureProgressBar" parent="HealthBarContainer" unique_id=1757506558]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

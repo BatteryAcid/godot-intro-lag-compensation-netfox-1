@@ -6,7 +6,6 @@ const JUMP_VELOCITY = -400.0
 const ship_types: Array[String] = ["default", "ship2"]
 
 @export var player_input: PlayerInput
-@export var input_synchronizer: MultiplayerSynchronizer
 @export var player_sprite: AnimatedSprite2D
 @export var selected_ship: String = ship_types[0]
 @export var attribute_component: AttributeComponent
@@ -19,7 +18,7 @@ func _enter_tree() -> void:
 	player_input.set_multiplayer_authority(str(name).to_int())
 
 func _ready() -> void:
-	input_synchronizer.set_visibility_for(1, true)
+	set_physics_process(false)
 	player_sprite.animation = selected_ship
 	
 	attribute_component.health_changed.connect(_health_changed)
@@ -28,8 +27,8 @@ func _ready() -> void:
 		attribute_component.no_health.connect(_player_no_health)
 		MatchManager.game_restarted.connect(reset_player)
 	
-func _physics_process(delta: float) -> void:
-	if get_tree().get_multiplayer().has_multiplayer_peer() and is_multiplayer_authority() and not MatchManager.game_paused:
+func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:
+	if get_tree().get_multiplayer().has_multiplayer_peer() and not MatchManager.game_paused:
 		var direction := player_input.input_dir
 		if direction:
 			_velocity.x = direction.x * SPEED

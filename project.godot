@@ -8,17 +8,28 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
-config/name="godot-intro-multiplayer-1"
+config/name="godot-lag-compensation-netfox-1"
 run/main_scene="uid://wdtx61fmwthf"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/image="uid://dyh6r887he05y"
 
 [autoload]
 
 NetworkManager="*res://scripts/network/network_manager.gd"
 MatchManager="*res://scripts/multiplayer/match_manager.gd"
+NetworkTime="*uid://cnqdxyjptkfvp"
+NetworkTimeSynchronizer="*uid://5rmn2ik3kjo8"
+NetworkRollback="*uid://gas743comroj"
+NetworkEvents="*uid://bdmobxxptryj0"
+NetworkPerformance="*uid://cqgf7aqmjfoa3"
+WindowTiler="*uid://cmqjajhjgffm1"
+NetworkSimulator="*uid://1y2ey1e6qjwr"
 
 [display]
 
@@ -26,6 +37,10 @@ window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/resizable=false
 window/size/always_on_top=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/netfox.extras/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox/plugin.cfg")
 
 [input]
 
@@ -54,3 +69,9 @@ fire={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":32,"location":0,"echo":false,"script":null)
 ]
 }
+
+[netfox]
+
+autoconnect/port=8000
+autoconnect/simulated_latency_ms=100
+autoconnect/enabled=false
