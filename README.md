@@ -11,7 +11,7 @@ This is a followup project to the [Intro to Godot Multiplayer Course](https://yo
 
 
 ## Video Tutorial
-- [This project's video tutorial](https://youtu.be/5Y9ov-6fbbk)
+- [This project's video tutorial](https://youtu.be/Ko0h67yu_hA)
 
 ## Usage
 - The latest commit represents the finished example project.
